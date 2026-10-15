@@ -1,6 +1,17 @@
-@Contabilidad.Api_HostAddress = http://localhost:5130
+@host = http://localhost:5130
 
-GET {{Contabilidad.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. Login
+POST {{host}}/api/auth/login
+Content-Type: application/json
 
-###
+{
+  "nombreUsuario": "admin",
+  "clave": "Admin123*"
+}
+
+### 2. Roles SIN token (debe dar 401)
+GET {{host}}/api/roles
+
+### 3. Roles CON token (pega el token del paso 1)
+GET {{host}}/api/roles
+Authorization: Bearer PEGA_AQUI_EL_TOKEN
