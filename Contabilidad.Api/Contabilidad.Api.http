@@ -1,17 +1,66 @@
 @host = http://localhost:5130
 
-### 1. Login
+### Login (ejecutar primero)
+# @name login
 POST {{host}}/api/auth/login
 Content-Type: application/json
 
-{
-  "nombreUsuario": "admin",
-  "clave": "Admin123*"
-}
+{ "nombreUsuario": "admin", "clave": "Admin123*" }
 
-### 2. Roles SIN token (debe dar 401)
-GET {{host}}/api/roles
+### Parametros
+GET {{host}}/api/parametros
+Authorization: Bearer {{login.response.body.token}}
 
-### 3. Roles CON token (pega el token del paso 1)
-GET {{host}}/api/roles
-Authorization: Bearer PEGA_AQUI_EL_TOKEN
+### Cambiar parametro 1
+PUT {{host}}/api/parametros/1
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "valor": "Mi Empresa, S.A." }
+
+### Periodos
+GET {{host}}/api/periodos
+Authorization: Bearer {{login.response.body.token}}
+
+### Crear periodo enero 2027
+POST {{host}}/api/periodos
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "anio": 2027, "mes": 1 }
+
+### Cerrar periodo 3
+PUT {{host}}/api/periodos/3/estado
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "estado": "Cerrado" }
+
+### Abrir periodo 3
+PUT {{host}}/api/periodos/3/estado
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "estado": "Abierto" }
+
+### Cuentas
+GET {{host}}/api/cuentas
+Authorization: Bearer {{login.response.body.token}}
+
+### Buscar cuentas
+GET {{host}}/api/cuentas?buscar=caja
+Authorization: Bearer {{login.response.body.token}}
+
+### Crear cuenta (idCuentaPadre 2 = cuenta 1.1)
+POST {{host}}/api/cuentas
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "codigo": "1.1.06", "nombre": "Cuentas por cobrar", "tipo": "Activo", "idCuentaPadre": 2, "aceptaMovimientos": true }
+
+### Crear cuenta repetida (debe dar 400)
+POST {{host}}/api/cuentas
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "codigo": "1.1.06", "nombre": "Repetida", "tipo": "Activo", "idCuentaPadre": 2, "aceptaMovimientos": true }

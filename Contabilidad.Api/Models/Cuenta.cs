@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Contabilidad.Api.Models;
 
-public partial class Cuentum
+public partial class Cuenta
 {
     public int IdCuenta { get; set; }
 
@@ -23,9 +23,9 @@ public partial class Cuentum
 
     public bool Activa { get; set; }
 
-    public virtual Cuentum? IdCuentaPadreNavigation { get; set; }
+    public virtual Cuenta? IdCuentaPadreNavigation { get; set; }
 
-    public virtual ICollection<Cuentum> InverseIdCuentaPadreNavigation { get; set; } = new List<Cuentum>();
+    public virtual ICollection<Cuenta> InverseIdCuentaPadreNavigation { get; set; } = new List<Cuenta>();
 
-    public virtual ICollection<PartidaDetalle> PartidaDetalles { get; set; } = new List<PartidaDetalle>();
+    public virtual ICollection<PartidaDetalle> PartidaDetalle { get; set; } = new List<PartidaDetalle>();
 }

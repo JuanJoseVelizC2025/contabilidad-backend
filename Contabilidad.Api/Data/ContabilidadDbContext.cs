@@ -12,23 +12,23 @@ public partial class ContabilidadDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Cuentum> Cuenta { get; set; }
+    public virtual DbSet<Cuenta> Cuenta { get; set; }
 
-    public virtual DbSet<ParametroSistema> ParametroSistemas { get; set; }
+    public virtual DbSet<ParametroSistema> ParametroSistema { get; set; }
 
-    public virtual DbSet<PartidaDetalle> PartidaDetalles { get; set; }
+    public virtual DbSet<Partida> Partida { get; set; }
 
-    public virtual DbSet<Partidum> Partida { get; set; }
+    public virtual DbSet<PartidaDetalle> PartidaDetalle { get; set; }
 
-    public virtual DbSet<PeriodoContable> PeriodoContables { get; set; }
+    public virtual DbSet<PeriodoContable> PeriodoContable { get; set; }
 
-    public virtual DbSet<Rol> Rols { get; set; }
+    public virtual DbSet<Rol> Rol { get; set; }
 
-    public virtual DbSet<Usuario> Usuarios { get; set; }
+    public virtual DbSet<Usuario> Usuario { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Cuentum>(entity =>
+        modelBuilder.Entity<Cuenta>(entity =>
         {
             entity.HasKey(e => e.IdCuenta).HasName("PK__Cuenta__D41FD70667152F67");
 
@@ -49,8 +49,6 @@ public partial class ContabilidadDbContext : DbContext
         {
             entity.HasKey(e => e.IdParametro).HasName("PK__Parametr__37B016F4A9881A98");
 
-            entity.ToTable("ParametroSistema");
-
             entity.HasIndex(e => e.Clave, "UQ__Parametr__E8181E111A006695").IsUnique();
 
             entity.Property(e => e.Clave).HasMaxLength(50);
@@ -58,27 +56,7 @@ public partial class ContabilidadDbContext : DbContext
             entity.Property(e => e.Valor).HasMaxLength(200);
         });
 
-        modelBuilder.Entity<PartidaDetalle>(entity =>
-        {
-            entity.HasKey(e => e.IdDetalle).HasName("PK__PartidaD__E43646A53A8A6A82");
-
-            entity.ToTable("PartidaDetalle");
-
-            entity.Property(e => e.Debe).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.Haber).HasColumnType("decimal(18, 2)");
-
-            entity.HasOne(d => d.IdCuentaNavigation).WithMany(p => p.PartidaDetalles)
-                .HasForeignKey(d => d.IdCuenta)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PartidaDe__IdCue__571DF1D5");
-
-            entity.HasOne(d => d.IdPartidaNavigation).WithMany(p => p.PartidaDetalles)
-                .HasForeignKey(d => d.IdPartida)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PartidaDe__IdPar__5629CD9C");
-        });
-
-        modelBuilder.Entity<Partidum>(entity =>
+        modelBuilder.Entity<Partida>(entity =>
         {
             entity.HasKey(e => e.IdPartida).HasName("PK__Partida__6ED660C7543AFC60");
 
@@ -101,11 +79,27 @@ public partial class ContabilidadDbContext : DbContext
                 .HasConstraintName("FK__Partida__IdUsuar__5165187F");
         });
 
+        modelBuilder.Entity<PartidaDetalle>(entity =>
+        {
+            entity.HasKey(e => e.IdDetalle).HasName("PK__PartidaD__E43646A53A8A6A82");
+
+            entity.Property(e => e.Debe).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.Haber).HasColumnType("decimal(18, 2)");
+
+            entity.HasOne(d => d.IdCuentaNavigation).WithMany(p => p.PartidaDetalle)
+                .HasForeignKey(d => d.IdCuenta)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__PartidaDe__IdCue__571DF1D5");
+
+            entity.HasOne(d => d.IdPartidaNavigation).WithMany(p => p.PartidaDetalle)
+                .HasForeignKey(d => d.IdPartida)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__PartidaDe__IdPar__5629CD9C");
+        });
+
         modelBuilder.Entity<PeriodoContable>(entity =>
         {
             entity.HasKey(e => e.IdPeriodo).HasName("PK__PeriodoC__B44699FE3D2F6FFF");
-
-            entity.ToTable("PeriodoContable");
 
             entity.HasIndex(e => new { e.Anio, e.Mes }, "UQ_Periodo").IsUnique();
 
@@ -118,8 +112,6 @@ public partial class ContabilidadDbContext : DbContext
         {
             entity.HasKey(e => e.IdRol).HasName("PK__Rol__2A49584C46FB609A");
 
-            entity.ToTable("Rol");
-
             entity.HasIndex(e => e.Nombre, "UQ__Rol__75E3EFCF16576116").IsUnique();
 
             entity.Property(e => e.Descripcion).HasMaxLength(200);
@@ -130,8 +122,6 @@ public partial class ContabilidadDbContext : DbContext
         {
             entity.HasKey(e => e.IdUsuario).HasName("PK__Usuario__5B65BF9763874DCD");
 
-            entity.ToTable("Usuario");
-
             entity.HasIndex(e => e.NombreUsuario, "UQ__Usuario__6B0F5AE0751A7945").IsUnique();
 
             entity.Property(e => e.Activo).HasDefaultValue(true);
@@ -140,7 +130,7 @@ public partial class ContabilidadDbContext : DbContext
             entity.Property(e => e.NombreCompleto).HasMaxLength(150);
             entity.Property(e => e.NombreUsuario).HasMaxLength(50);
 
-            entity.HasOne(d => d.IdRolNavigation).WithMany(p => p.Usuarios)
+            entity.HasOne(d => d.IdRolNavigation).WithMany(p => p.Usuario)
                 .HasForeignKey(d => d.IdRol)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Usuario__IdRol__3B75D760");

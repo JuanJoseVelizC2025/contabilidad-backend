@@ -15,7 +15,7 @@ public partial class PartidaDetalle
 
     public decimal Haber { get; set; }
 
-    public virtual Cuentum IdCuentaNavigation { get; set; } = null!;
+    public virtual Cuenta IdCuentaNavigation { get; set; } = null!;
 
-    public virtual Partidum IdPartidaNavigation { get; set; } = null!;
+    public virtual Partida IdPartidaNavigation { get; set; } = null!;
 }

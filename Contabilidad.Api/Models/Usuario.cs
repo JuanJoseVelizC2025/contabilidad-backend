@@ -21,5 +21,5 @@ public partial class Usuario
 
     public virtual Rol IdRolNavigation { get; set; } = null!;
 
-    public virtual ICollection<Partidum> Partida { get; set; } = new List<Partidum>();
+    public virtual ICollection<Partida> Partida { get; set; } = new List<Partida>();
 }
