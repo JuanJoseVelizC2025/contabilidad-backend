@@ -64,3 +64,87 @@ Authorization: Bearer {{login.response.body.token}}
 Content-Type: application/json
 
 { "codigo": "1.1.06", "nombre": "Repetida", "tipo": "Activo", "idCuentaPadre": 2, "aceptaMovimientos": true }
+
+### P1 - Venta al contado (valida)
+POST {{host}}/api/partidas
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "fecha": "2026-10-15", "concepto": "Venta al contado", "detalle": [ { "idCuenta": 3, "debe": 1000, "haber": 0 }, { "idCuenta": 21, "debe": 0, "haber": 1000 } ] }
+
+### P2 - Costo de ventas (valida)
+POST {{host}}/api/partidas
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "fecha": "2026-10-15", "concepto": "Costo de la venta", "detalle": [ { "idCuenta": 25, "debe": 400, "haber": 0 }, { "idCuenta": 3, "debe": 0, "haber": 400 } ] }
+
+### P3 - Pago de alquiler (valida)
+POST {{host}}/api/partidas
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "fecha": "2026-10-16", "concepto": "Pago de alquiler", "detalle": [ { "idCuenta": 29, "debe": 300, "haber": 0 }, { "idCuenta": 3, "debe": 0, "haber": 300 } ] }
+
+### P4 - Partida de prueba para anular (valida)
+POST {{host}}/api/partidas
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "fecha": "2026-10-16", "concepto": "Prueba para anular", "detalle": [ { "idCuenta": 3, "debe": 50, "haber": 0 }, { "idCuenta": 21, "debe": 0, "haber": 50 } ] }
+
+### ERROR - No cuadra (debe dar 400)
+POST {{host}}/api/partidas
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "fecha": "2026-10-15", "concepto": "Descuadrada", "detalle": [ { "idCuenta": 3, "debe": 500, "haber": 0 }, { "idCuenta": 21, "debe": 0, "haber": 400 } ] }
+
+### ERROR - Cuenta que no acepta movimientos (debe dar 400)
+POST {{host}}/api/partidas
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "fecha": "2026-10-15", "concepto": "Cuenta padre", "detalle": [ { "idCuenta": 1, "debe": 100, "haber": 0 }, { "idCuenta": 21, "debe": 0, "haber": 100 } ] }
+
+### ERROR - Fecha sin periodo (debe dar 400)
+POST {{host}}/api/partidas
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "fecha": "2027-05-10", "concepto": "Fuera de periodo", "detalle": [ { "idCuenta": 3, "debe": 100, "haber": 0 }, { "idCuenta": 21, "debe": 0, "haber": 100 } ] }
+
+### Listar partidas
+GET {{host}}/api/partidas
+Authorization: Bearer {{login.response.body.token}}
+
+### Ver partida 1 con su detalle
+GET {{host}}/api/partidas/1
+Authorization: Bearer {{login.response.body.token}}
+
+### Anular partida 4
+PUT {{host}}/api/partidas/4/anular
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "motivo": "Partida de prueba" }
+
+### Libro Diario
+GET {{host}}/api/reportes/diario?desde=2026-10-01&hasta=2026-10-31
+Authorization: Bearer {{login.response.body.token}}
+
+### Libro Mayor General (todas las cuentas)
+GET {{host}}/api/reportes/mayor?desde=2026-10-01&hasta=2026-10-31
+Authorization: Bearer {{login.response.body.token}}
+
+### Libro Mayor de una cuenta (Caja)
+GET {{host}}/api/reportes/mayor?desde=2026-10-01&hasta=2026-10-31&idCuenta=3
+Authorization: Bearer {{login.response.body.token}}
+
+### Estado de Resultados por rango
+GET {{host}}/api/reportes/estado-resultados?desde=2026-10-01&hasta=2026-10-31
+Authorization: Bearer {{login.response.body.token}}
+
+### Estado de Resultados por periodo (octubre 2026)
+GET {{host}}/api/reportes/estado-resultados?idPeriodo=1
+Authorization: Bearer {{login.response.body.token}}
