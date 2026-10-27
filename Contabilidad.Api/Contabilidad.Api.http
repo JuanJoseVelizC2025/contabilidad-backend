@@ -1,3 +1,4 @@
+//@host = http://contabilidad-umg.runasp.net
 @host = http://localhost:5130
 
 ### Login (ejecutar primero)
