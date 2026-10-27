@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Contabilidad.Api.Data;
 using Contabilidad.Api.Models;
+using Contabilidad.Api.Services; // NUEVO
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -12,7 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ContabilidadDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Conexion")));
 
-builder.Services.AddControllers()
+builder.Services.AddHttpContextAccessor(); // NUEVO
+builder.Services.AddScoped<Auditoria>(); // NUEVO
+
+builder.Services.AddControllers(o => o.Filters.Add<AuditoriaFilter>()) // NUEVO
     .AddJsonOptions(o => o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddCors(opt => opt.AddPolicy("front", p =>

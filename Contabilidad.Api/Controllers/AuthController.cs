@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Text;
 using Contabilidad.Api.Data;
 using Contabilidad.Api.Models;
+using Contabilidad.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -15,11 +16,13 @@ public class AuthController : ControllerBase
 {
     private readonly ContabilidadDbContext _db;
     private readonly IConfiguration _config;
+    private readonly Auditoria _auditoria;
 
-    public AuthController(ContabilidadDbContext db, IConfiguration config)
+    public AuthController(ContabilidadDbContext db, IConfiguration config, Auditoria auditoria)
     {
         _db = db;
         _config = config;
+        _auditoria = auditoria;
     }
 
     public record LoginRequest(string NombreUsuario, string Clave);
@@ -31,7 +34,11 @@ public class AuthController : ControllerBase
             .FirstOrDefaultAsync(u => u.NombreUsuario == req.NombreUsuario);
 
         if (user == null || user.Activo != true || !BCrypt.Net.BCrypt.Verify(req.Clave, user.ClaveHash))
+        {
+            await _auditoria.Registrar("Seguridad", "Inicio de sesión fallido",
+                $"Intento con el usuario {req.NombreUsuario}", req.NombreUsuario);
             return Unauthorized(new { mensaje = "Usuario o clave incorrectos" });
+        }
 
         var rol = await _db.Set<Rol>()
             .Where(r => r.IdRol == user.IdRol)
@@ -56,6 +63,9 @@ public class AuthController : ControllerBase
         };
 
         var token = new JsonWebTokenHandler().CreateToken(descriptor);
+
+        await _auditoria.Registrar("Seguridad", "Inicio de sesión", $"Rol {rol}",
+            user.NombreUsuario, user.IdUsuario);
 
         return Ok(new
         {
