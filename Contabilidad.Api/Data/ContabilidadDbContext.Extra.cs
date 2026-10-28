@@ -52,5 +52,41 @@ public partial class ContabilidadDbContext
             e.Property(x => x.Proposito).HasMaxLength(20);
             e.Property(x => x.CodigoHash).HasMaxLength(100);
         });
+
+        modelBuilder.Entity<Tercero>(e =>
+        {
+            e.ToTable("Tercero");
+            e.HasKey(x => x.IdTercero);
+            e.Property(x => x.Tipo).HasMaxLength(10);
+            e.Property(x => x.Nombre).HasMaxLength(150);
+            e.Property(x => x.Nit).HasMaxLength(20);
+            e.Property(x => x.Direccion).HasMaxLength(200);
+            e.Property(x => x.Telefono).HasMaxLength(30);
+            e.Property(x => x.Correo).HasMaxLength(150);
+        });
+
+        modelBuilder.Entity<DocumentoComercial>(e =>
+        {
+            e.ToTable("DocumentoComercial");
+            e.HasKey(x => x.IdDocumento);
+            e.Property(x => x.Tipo).HasMaxLength(10);
+            e.Property(x => x.Condicion).HasMaxLength(10);
+            e.Property(x => x.Concepto).HasMaxLength(250);
+            e.Property(x => x.Subtotal).HasPrecision(18, 2);
+            e.Property(x => x.Iva).HasPrecision(18, 2);
+            e.Property(x => x.Total).HasPrecision(18, 2);
+            e.Property(x => x.Estado).HasMaxLength(12);
+            e.Property(x => x.MotivoAnulacion).HasMaxLength(250);
+        });
+
+        modelBuilder.Entity<DocumentoLinea>(e =>
+        {
+            e.ToTable("DocumentoLinea");
+            e.HasKey(x => x.IdLinea);
+            e.Property(x => x.Descripcion).HasMaxLength(200);
+            e.Property(x => x.Cantidad).HasPrecision(18, 2);
+            e.Property(x => x.PrecioUnitario).HasPrecision(18, 2);
+            e.Property(x => x.Subtotal).HasPrecision(18, 2);
+        });
     }
 }
