@@ -125,7 +125,8 @@ public class PartidasController : ControllerBase
                 p.IdPeriodo,
                 Anio = _db.Set<PeriodoContable>().Where(x => x.IdPeriodo == p.IdPeriodo).Select(x => x.Anio).FirstOrDefault(),
                 Mes = _db.Set<PeriodoContable>().Where(x => x.IdPeriodo == p.IdPeriodo).Select(x => x.Mes).FirstOrDefault(),
-                Total = _db.Set<PartidaDetalle>().Where(d => d.IdPartida == p.IdPartida).Sum(d => (decimal?)d.Debe) ?? 0m
+                Total = _db.Set<PartidaDetalle>().Where(d => d.IdPartida == p.IdPartida).Sum(d => (decimal?)d.Debe) ?? 0m,
+                Origen = _db.Set<PartidaOrigen>().Where(o => o.IdPartida == p.IdPartida).Select(o => o.Origen).FirstOrDefault() ?? "Manual"
             })
             .ToListAsync();
 

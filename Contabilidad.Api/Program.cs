@@ -15,6 +15,9 @@ builder.Services.AddDbContext<ContabilidadDbContext>(opt =>
 
 builder.Services.AddHttpContextAccessor(); // NUEVO
 builder.Services.AddScoped<Auditoria>(); // NUEVO
+builder.Services.AddScoped<PartidaServicio>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<CorreoServicio>();
 
 builder.Services.AddControllers(o => o.Filters.Add<AuditoriaFilter>()) // NUEVO
     .AddJsonOptions(o => o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
