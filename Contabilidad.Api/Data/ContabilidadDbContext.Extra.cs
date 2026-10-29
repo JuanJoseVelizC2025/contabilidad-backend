@@ -88,5 +88,23 @@ public partial class ContabilidadDbContext
             e.Property(x => x.PrecioUnitario).HasPrecision(18, 2);
             e.Property(x => x.Subtotal).HasPrecision(18, 2);
         });
+
+        modelBuilder.Entity<ActivoFijo>(e =>
+        {
+            e.ToTable("ActivoFijo");
+            e.HasKey(x => x.IdActivo);
+            e.Property(x => x.Codigo).HasMaxLength(20);
+            e.Property(x => x.Descripcion).HasMaxLength(200);
+            e.Property(x => x.Costo).HasPrecision(18, 2);
+            e.Property(x => x.ValorResidual).HasPrecision(18, 2);
+            e.Property(x => x.Estado).HasMaxLength(10);
+        });
+
+        modelBuilder.Entity<DepreciacionActivo>(e =>
+        {
+            e.ToTable("DepreciacionActivo");
+            e.HasKey(x => x.IdDepreciacion);
+            e.Property(x => x.Monto).HasPrecision(18, 2);
+        });
     }
 }

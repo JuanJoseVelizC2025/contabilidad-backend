@@ -1,0 +1,10 @@
+CREATE TABLE Bitacora (
+    IdBitacora INT IDENTITY(1,1) PRIMARY KEY,
+    FechaHora DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+    IdUsuario INT NULL,
+    NombreUsuario NVARCHAR(50) NOT NULL,
+    Modulo NVARCHAR(40) NOT NULL,
+    Accion NVARCHAR(60) NOT NULL,
+    Detalle NVARCHAR(500) NOT NULL
+);
+CREATE INDEX IX_Bitacora_Fecha ON Bitacora(FechaHora DESC);
